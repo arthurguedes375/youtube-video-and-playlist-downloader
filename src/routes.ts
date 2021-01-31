@@ -6,5 +6,6 @@ const routes = express.Router();
 import youtubeController from '@controllers/youtubeController';
 
 routes.post('/videos', youtubeController.video);
+routes.post('/playlists', youtubeController.playlist);
 
 export default routes;

@@ -1,0 +1,30 @@
+FORMAT: 1A
+HOST: http://localhost:3333
+
+# Group Youtube Downloader
+
+## Download a video [/videos]
+### Download a video [POST]
++ Response 200 (application/json)
+    {
+        "message": "Video Downloaded"
+    }
++ Parameters
+    + Note: This params are on the body :) (string) - Do not use this param this is just a note that i am leaving for you 
+    + video_url: https://www.youtube.com/watch?v=d98di8hidesh (string) - Video url that you want to download
+    + convert_to: mp3 | mp4 (string, optional) - The video format that you want to download
+        + Default: mp3
+
+
+## Download a playlist [/playlists]
+### Download a playlist [POST]
++ Response 200 (application/json)
+    {
+        "message": "Your playlist is gonna be downloaded in few minutes, go get some coffee :)"
+    }
++ Parameters
+    + Note: This params are on the body :) (string) - Do not use this param this is just a note that i am leaving for you 
+    + playlist_url: https://www.youtube.com/playlist?list=d98di8hidesh (string) - Playlist url that you want to download
+    + playlist_name: My songs (string) - This name will be the same as the folder that the videos are in
+    + convert_to: mp3 | mp4 (string, optional) - The videos formats that you want to download
+        + Default: mp3
