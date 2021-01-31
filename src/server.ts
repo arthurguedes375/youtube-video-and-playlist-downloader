@@ -1,10 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
 
-// Cluster
-import cluster from 'cluster';
-import os from 'os';
-
 // Express
 import express from 'express';
 const app = express();
@@ -17,6 +13,12 @@ import compression from 'compression';
 // Routes
 import routes from './routes';
 
+// Set Up Dirs
+import { dirUtil } from '@utils/dir';
+dirUtil.setUpDirs();
+
+
+
 // Mids
 app.use(express.json());
 app.use(cors());
@@ -28,14 +30,6 @@ app.use(routes);
 
 
 
-// Cluster
-if (cluster.isMaster) {
-    const numCPUs = os.cpus().length;
-    for (let i = 0; i < numCPUs; i++) {
-        cluster.fork();
-    }
-} else {
-    app.listen(process.env.HTTP_PORT || 3333);
-}
+app.listen(process.env.HTTP_PORT || 3333);
 
 export default app;

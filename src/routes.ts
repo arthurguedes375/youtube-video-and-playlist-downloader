@@ -2,12 +2,9 @@ import express from 'express';
 const routes = express.Router();
 
 
-routes.get('/', async (req, res) => {
-    const tst = async () => {
-        return 'hi'
-    }
-    await tst();
-    return res.status(200).json({ message: process.env.HTTP_PORT });
-})
+// Controllers
+import youtubeController from '@controllers/youtubeController';
+
+routes.post('/videos', youtubeController.video);
 
 export default routes;
