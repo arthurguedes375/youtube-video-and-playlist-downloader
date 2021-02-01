@@ -1,0 +1,37 @@
+{
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "targets": {
+                    "node": "current"
+                }
+            }
+        ],
+        "@babel/preset-typescript"
+    ],
+    "plugins": [
+        "@babel/plugin-proposal-class-properties",
+        [
+            "module-resolver",
+            {
+                "root": [
+                    "./"
+                ],
+                "alias": {
+                    "@controllers": "./src/controllers",
+                    "@models": "./src/models",
+                    "@utils": "./src/utils",
+                    "@middlewares": "./src/middlewares",
+                    "@config": "./src/config",
+                    "@db": "./src/db",
+                    "@payments": "./src/payments",
+                    "@interfaces": "./src/interfaces"
+                }
+            }
+        ]
+    ],
+    "ignore": [
+        "**/*.test.ts"
+    ]
+}

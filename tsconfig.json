@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "outDir": "./lib/",
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2017",
+    "module": "commonjs",
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": [
+        "./src/*"
+      ],
+      "@controllers/*": [
+        "./src/controllers/*"
+      ],
+      "@models/*": [
+        "./src/models/*"
+      ],
+      "@utils/*": [
+        "./src/utils/*"
+      ],
+      "@middlewares/*": [
+        "./src/middlewares/*"
+      ],
+      "@config/*": [
+        "./src/config/*"
+      ],
+      "@db/*": [
+        "./src/db/*"
+      ],
+      "@payments/*": [
+        "./src/payments/*"
+      ],
+      "@interfaces/*": [
+        "./src/interfaces/*"
+      ]
+    },
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}
