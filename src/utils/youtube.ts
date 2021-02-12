@@ -11,34 +11,35 @@ import { videoUtil } from '@utils/video';
 import { urlUtil } from '@utils/url';
 
 export const youtubeUtil = {
-    downloadPlaylist: async (playlistUrl: string, cb: () => any, playlistName: string, type: string = 'mp3') => {
+    getPlaylistPageContent: async (playlistId: string, pageToken?: string) => {
         try {
+            const { data, status } = await youtubeApi.
+                get('playlistItems', {
+                    params: {
+                        part: 'contentDetails',
+                        maxResults: 50,
+                        playlistId,
+                        pageToken,
+                    },
+                });
+            return data;
+        } catch (err) {
+            const { response } = err;
+            throw new Error(response);
+        }
+    },
+
+    downloadPlaylist: async (playlistUrl: string, cb: () => any, playlistName: string, type: string = 'mp3', deletedVideos: number[] = []) => {
+        try {
+
+            deletedVideos = deletedVideos.map(index => index - 1)
 
             const { list: playlistId } = urlUtil.parseQueryParams(playlistUrl);
 
             let playlistVideos: string[] = [];
 
-            const getPlaylistContent = async (playlistId: string, pageToken?: string) => {
-                try {
-                    const { data, status } = await youtubeApi.
-                        get('playlistItems', {
-                            params: {
-                                part: 'contentDetails',
-                                maxResults: 50,
-                                playlistId,
-                                pageToken,
-                            },
-                        });
-                    return data;
-                } catch (err) {
-                    const { response } = err;
-                    throw new Error(response);
-                }
-            };
-
-
             const loadPlaylistContent = async (pageToken?: string) => {
-                const data = await getPlaylistContent(playlistId, pageToken);
+                const data = await youtubeUtil.getPlaylistPageContent(playlistId, pageToken);
                 if (data.items.length > 0) {
                     playlistVideos = [
                         ...playlistVideos,
@@ -52,8 +53,20 @@ export const youtubeUtil = {
             };
 
             await loadPlaylistContent();
+            playlistVideos = playlistVideos.filter((value, index) => !deletedVideos.includes(index));
 
             const downloadVideos = (videosIds: string[], index: number = 0, cbk?: any) => {
+
+                if (process.env.LOGS) {
+                    const downloadedPercentage = Math.round(((index + 1) / videosIds.length) * 100);
+                    let points = '';
+                    for (let i = 0; i < downloadedPercentage / 5; i++) {
+                        points = points + '.';
+                    }
+                    console.clear();
+                    console.log(`${index + 1}/${videosIds.length} [${points}] ${downloadedPercentage}%`);
+                }
+
                 const videoUrl = `https://www.youtube.com/watch?v=${videosIds[index]}`;
                 let cb = downloadVideos;
                 if (!videosIds[index + 1]) cb = cbk;

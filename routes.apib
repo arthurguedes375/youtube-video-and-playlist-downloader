@@ -14,6 +14,9 @@ HOST: http://localhost:3333
     + video_url: https://www.youtube.com/watch?v=d98di8hidesh (string) - Video url that you want to download
     + convert_to: mp3 | mp4 (string, optional) - The video format that you want to download
         + Default: mp3
+    + deleted_videos: [7, 45, 13, 23] (array, optional) - This parameter only accepts an array of numbers with the videos indexes that you DONT wanna download(if the videos that you dont wanna download are the 1st and the 6th then the array is gonna be: [1, 6] )
+        + Default: []
+    
 
 
 ## Download a playlist [/playlists]
