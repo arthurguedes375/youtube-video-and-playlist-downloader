@@ -19,6 +19,7 @@
     "build:js": "babel src --out-dir lib --extensions \".js,.ts\" --source-maps inline"
   },
   "dependencies": {
+    "archiver": "^5.2.0",
     "axios": "^0.21.1",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
@@ -32,6 +33,7 @@
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-typescript": "^7.8.3",
+    "@types/archiver": "^5.1.0",
     "@types/axios": "^0.14.0",
     "@types/compression": "^1.7.0",
     "@types/cors": "^2.8.8",

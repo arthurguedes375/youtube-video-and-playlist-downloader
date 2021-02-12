@@ -17,6 +17,7 @@ const youtubeController: IYoutubeController = {
                 playlist_name,
                 convert_to,
                 deleted_videos,
+                compress,
             } = req.body;
 
             if (!playlist_url) return res.status(400).json({ message: 'It is missing playlist_url on body' })
@@ -37,6 +38,8 @@ const youtubeController: IYoutubeController = {
 
             if (!areDeletedVideosRight(deleted_videos)) return res.status(400).json({ message: `The field "deleted_videos" should be an array of numbers` })
 
+            if (typeof compress !== 'boolean' && !!compress) return res.status(400).json({ message: `The field "compress" should be a boolean` })
+
             youtubeUtil.downloadPlaylist(
                 playlist_url,
                 () => {
@@ -45,6 +48,7 @@ const youtubeController: IYoutubeController = {
                 playlist_name,
                 convert_to,
                 deleted_videos,
+                compress,
             );
 
             res.status(200).json({ message: 'Your playlist is will be downloaded in few minutes, go get some coffee :)' })

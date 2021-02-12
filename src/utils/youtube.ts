@@ -9,6 +9,7 @@ import youtubeApi from '@config/youtubeApi';
 // Utils
 import { videoUtil } from '@utils/video';
 import { urlUtil } from '@utils/url';
+import { compressionUtil } from './compression';
 
 export const youtubeUtil = {
     getPlaylistPageContent: async (playlistId: string, pageToken?: string) => {
@@ -29,7 +30,7 @@ export const youtubeUtil = {
         }
     },
 
-    downloadPlaylist: async (playlistUrl: string, cb: () => any, playlistName: string, type: string = 'mp3', deletedVideos: number[] = []) => {
+    downloadPlaylist: async (playlistUrl: string, cb: () => any, playlistName: string, type: string = 'mp3', deletedVideos: number[] = [], compress: boolean = false) => {
         try {
 
             deletedVideos = deletedVideos.map(index => index - 1)
@@ -91,11 +92,20 @@ export const youtubeUtil = {
 
             let cont = 0;
 
-            for (let i = 0; i <= ((Number.parseInt(<any>process.env.WORKERS) - 1) || 0); i++) {
+            let processWorkers = Number.parseInt(<any>process.env.WORKERS);
+
+            if (playlistVideos.length < processWorkers) processWorkers = playlistVideos.length;
+
+
+            for (let i = 0; i <= ((processWorkers - 1) || 0); i++) {
                 downloadVideos(playlistVideos, 0 + i, () => {
                     cont++;
-                    if (cont === Number.parseInt(<any>process.env.WORKERS)) {
-                        cb();
+                    if (cont === processWorkers) {
+                        if (compress) {
+                            compressionUtil.compress(path.resolve('saves', 'playlists', playlistName), cb)
+                        } else {
+                            cb()
+                        }
                     }
                 });
             }

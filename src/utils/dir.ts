@@ -6,6 +6,7 @@ export const dirUtil = {
         try {
             const dirs: any = {
                 saves: {
+                    compressed: null,
                     playlists: null,
                     videos: null,
                 }
