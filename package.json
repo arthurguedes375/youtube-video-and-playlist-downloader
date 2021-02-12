@@ -1,7 +1,7 @@
 {
-  "name": "",
+  "name": "youtube-video-and-playlist-downloader",
   "version": "1.0.0",
-  "description": "",
+  "description": "This app can download and compress any playlist or any video in the shortest time and in 2 supported formats: mp3 or mp4",
   "main": "src/server.ts",
   "scripts": {
     "prestart": "clear",
