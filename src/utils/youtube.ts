@@ -56,7 +56,9 @@ export const youtubeUtil = {
             playlistVideos = playlistVideos.filter((value, index) => !deletedVideos.includes(index));
 
             const downloadVideos = (videosIds: string[], index: number = 0, cbk?: any) => {
+                const index_steps = Number.parseInt(<any>process.env.WORKERS);
 
+                // LOGS
                 if (process.env.LOGS) {
                     const downloadedPercentage = Math.round(((index + 1) / videosIds.length) * 100);
                     let points = '';
@@ -66,10 +68,11 @@ export const youtubeUtil = {
                     console.clear();
                     console.log(`${index + 1}/${videosIds.length} [${points}] ${downloadedPercentage}%`);
                 }
+                // --------
 
                 const videoUrl = `https://www.youtube.com/watch?v=${videosIds[index]}`;
                 let cb = downloadVideos;
-                if (!videosIds[index + 1]) cb = cbk;
+                if (!videosIds[index + index_steps]) cb = cbk;
                 youtubeUtil.downloadVideo(
                     videoUrl,
                     cb,
@@ -80,13 +83,23 @@ export const youtubeUtil = {
                     index + 1,
                     [
                         videosIds,
-                        index + 1,
-                        cbk,
+                        index + index_steps,
+                        cbk
                     ]
                 )
             };
 
-            downloadVideos(playlistVideos, 0, cb);
+            let cont = 0;
+
+            for (let i = 0; i <= ((Number.parseInt(<any>process.env.WORKERS) - 1) || 0); i++) {
+                downloadVideos(playlistVideos, 0 + i, () => {
+                    cont++;
+                    if (cont === Number.parseInt(<any>process.env.WORKERS)) {
+                        cb();
+                    }
+                });
+            }
+
 
         } catch (err) {
             console.log(err);
