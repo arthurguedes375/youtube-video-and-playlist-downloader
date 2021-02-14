@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 // Utils
 import { youtubeUtil } from '@src/utils/youtube';
+import { parseBool } from '@src/utils/parser';
 
 // Interfaces
 interface IYoutubeController {
@@ -17,6 +18,9 @@ const youtubeController: IYoutubeController = {
                 playlist_name,
                 convert_to,
                 deleted_videos,
+            } = req.body;
+
+            let {
                 compress,
             } = req.body;
 
@@ -38,20 +42,32 @@ const youtubeController: IYoutubeController = {
 
             if (!areDeletedVideosRight(deleted_videos)) return res.status(400).json({ message: `The field "deleted_videos" should be an array of numbers` })
 
-            if (typeof compress !== 'boolean' && !!compress) return res.status(400).json({ message: `The field "compress" should be a boolean` })
+            if (parseBool(process.env.FORCE_COMPRESSING)) compress = true;
+            if (typeof compress !== 'boolean' && !!compress && !parseBool(process.env.FORCE_COMPRESSING)) return res.status(400).json({ message: `The field "compress" should be a boolean` })
+
+
+            const downloadCallback = (filedata?: object) => {
+                if (parseBool(process.env.LOGS)) {
+                    console.log("PLAYLIST DOWNLOAD IS DONE !")
+                    console.log(filedata)
+                }
+                const responseBody = {
+                    ...filedata,
+                    filepath: undefined,
+                    message: 'Your playlist processing is done! You just need to download it clicking on the button below!'
+                };
+                res.status(200).json(responseBody);
+            };
 
             youtubeUtil.downloadPlaylist(
                 playlist_url,
-                () => {
-                    console.log("PLAYLIST DOWNLOAD IS DONE !")
-                },
+                downloadCallback,
                 playlist_name,
                 convert_to,
                 deleted_videos,
                 compress,
             );
 
-            res.status(200).json({ message: 'Your playlist is will be downloaded in few minutes, go get some coffee :)' })
 
         } catch (err) {
             return res.status(500).json(err);

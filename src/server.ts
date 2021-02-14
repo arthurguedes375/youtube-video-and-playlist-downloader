@@ -1,6 +1,9 @@
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
 
+// Path
+import path from 'path';
+
 // Express
 import express from 'express';
 const app = express();
@@ -27,6 +30,10 @@ if (process.env.NODE_ENV == 'dev') {
     app.use(morgan('dev'));
 }
 app.use(routes);
+
+// Files
+app.use('/downloads/playlist', express.static(path.resolve('saves', 'compressed')));
+app.use('/downloads/videos', express.static(path.resolve('saves', 'videos')));
 
 
 

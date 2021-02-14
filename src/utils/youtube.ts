@@ -10,6 +10,7 @@ import youtubeApi from '@config/youtubeApi';
 import { videoUtil } from '@utils/video';
 import { urlUtil } from '@utils/url';
 import { compressionUtil } from './compression';
+import { parseBool } from './parser';
 
 export const youtubeUtil = {
     getPlaylistPageContent: async (playlistId: string, pageToken?: string) => {
@@ -30,7 +31,7 @@ export const youtubeUtil = {
         }
     },
 
-    downloadPlaylist: async (playlistUrl: string, cb: () => any, playlistName: string, type: string = 'mp3', deletedVideos: number[] = [], compress: boolean = false) => {
+    downloadPlaylist: async (playlistUrl: string, cb: (filedata?: object) => any, playlistName: string, type: string = 'mp3', deletedVideos: number[] = [], compress: boolean = false) => {
         try {
 
             deletedVideos = deletedVideos.map(index => index - 1)
@@ -60,7 +61,7 @@ export const youtubeUtil = {
                 const index_steps = Number.parseInt(<any>process.env.WORKERS);
 
                 // LOGS
-                if (process.env.LOGS) {
+                if (parseBool(process.env.LOGS)) {
                     const downloadedPercentage = Math.round(((index + 1) / videosIds.length) * 100);
                     let points = '';
                     for (let i = 0; i < downloadedPercentage / 5; i++) {

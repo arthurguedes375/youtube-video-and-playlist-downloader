@@ -1,0 +1,1 @@
+export const parseBool = (value: any): boolean => eval(value);
