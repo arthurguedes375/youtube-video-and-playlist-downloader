@@ -103,7 +103,10 @@ export const youtubeUtil = {
                     cont++;
                     if (cont === processWorkers) {
                         if (compress) {
-                            compressionUtil.compress(path.resolve('saves', 'playlists', playlistName), cb)
+                            compressionUtil.compress(path.resolve('saves', 'playlists', playlistName), (filedata) => {
+                                fs.rmdirSync(path.resolve('saves', 'playlists', playlistName), { recursive: true });
+                                cb(filedata);
+                            })
                         } else {
                             cb()
                         }
