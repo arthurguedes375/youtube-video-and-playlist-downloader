@@ -16,4 +16,9 @@ export const urlUtil = {
         });
         return query;
     },
+    getFileName: (url: string): any => {
+        const urlSplitted = url.split('/');
+        const filename = urlSplitted[urlSplitted.length - 1];
+        return filename;
+    },
 }

@@ -84,8 +84,14 @@ const youtubeController: IYoutubeController = {
 
             youtubeUtil.downloadVideo(
                 video_url,
-                () => {
-                    res.status(200).json({ message: 'Video Downloaded' })
+                (filedata: any) => {
+                    const response = {
+                        download: filedata.download,
+                        size: filedata.size,
+                        message: 'Your video processing is done! You just need to download it clicking on the button below!',
+                    };
+
+                    res.status(200).json(response);
                 },
                 convert_to,
             )

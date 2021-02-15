@@ -5,6 +5,7 @@ import crypto from 'crypto';
 
 // Utils
 import { parseBool } from './parser';
+import { downloadUtil } from './download';
 
 // Archiver
 import archiver from 'archiver';
@@ -24,8 +25,7 @@ export const compressionUtil = {
             zlib: { level: Number.parseInt(<any>process.env.COMPRESS_LEVEL) },
         });
 
-        const downloadLink = `http://${process.env.DOMAIN}:${process.env.HTTP_PORT}/downloads/playlist/${outFileName}`;
-
+        const downloadLink = downloadUtil.generatePlaylistDownloadUrl(outFileName);
 
         output.on('close', function () {
             const bytes = archive.pointer();

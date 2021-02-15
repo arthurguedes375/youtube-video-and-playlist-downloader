@@ -11,6 +11,7 @@ import { videoUtil } from '@utils/video';
 import { urlUtil } from '@utils/url';
 import { compressionUtil } from './compression';
 import { parseBool } from './parser';
+import { downloadUtil } from './download';
 
 export const youtubeUtil = {
     getPlaylistPageContent: async (playlistId: string, pageToken?: string) => {
@@ -57,7 +58,7 @@ export const youtubeUtil = {
             await loadPlaylistContent();
             playlistVideos = playlistVideos.filter((value, index) => !deletedVideos.includes(index));
 
-            const downloadVideos = (videosIds: string[], index: number = 0, cbk?: any) => {
+            const downloadVideos = (videosIds: string[], index: number = 0, cbk?: any, filedata?: any) => {
                 const index_steps = Number.parseInt(<any>process.env.WORKERS);
 
                 // LOGS
@@ -152,12 +153,23 @@ export const youtubeUtil = {
                 fs.mkdirSync(videoFilePath);
             }
 
-            videoFilePath = `${videoFilePath}/${(index) ? `${index} ` : ''}${videoTitle}.${typesItag[type].ext}`;
+            const filename = `${(index) ? `${index} ` : ''}${videoTitle}.${typesItag[type].ext}`;
+
+            videoFilePath = `${videoFilePath}/${filename}`;
+
+            let filesize = 0;
 
             youtube(videoUrl, { quality: typesItag[type].itag, })
+                .on('progress', (_, downloaded, total) => {
+                    filesize = total;
+                })
                 .pipe(fs.createWriteStream(videoFilePath))
                 .addListener('finish', () => {
-                    cb(...cbParams)
+                    const fileData = {
+                        size: filesize,
+                        download: downloadUtil.generateVideoDownloadUrl(filename),
+                    };
+                    cb(...cbParams, fileData)
                 });
         } catch (err) {
             if (videoFilePath) fs.unlinkSync(videoFilePath);

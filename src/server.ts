@@ -31,11 +31,6 @@ if (process.env.NODE_ENV == 'dev') {
 }
 app.use(routes);
 
-// Files
-app.use('/downloads/playlist', express.static(path.resolve('saves', 'compressed')));
-app.use('/downloads/videos', express.static(path.resolve('saves', 'videos')));
-
-
 
 app.listen(process.env.HTTP_PORT || 3333);
 
