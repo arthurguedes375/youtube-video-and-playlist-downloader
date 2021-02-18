@@ -6,7 +6,7 @@
 - Insert `.env.example` vars in `.env`
 - Install packages with the commands `yarn` or `npm i`
 - To start the Server you need to run: `yarn dev` or `npm run dev`
-- If you want to see the frontend you can clone it clicking [here](https://github.com/arthurguedes375/youtube-video-and-playlist-downloader-frontend/settings)
+- If you want to see the frontend you can clone it clicking [here](https://github.com/arthurguedes375/youtube-video-and-playlist-downloader-frontend)
 
 ## :satellite: Env vars
 - ` HTTP_PORT ` is the server's HTTP PORT example(on this example the port is 3333): ` http://localhost:3333 `)
